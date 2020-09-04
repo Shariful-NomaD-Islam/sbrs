@@ -1,0 +1,74 @@
+import java.text.SimpleDateFormat
+
+plugins {
+	id 'org.springframework.boot' version '2.3.3.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+	id 'application'
+}
+
+mainClassName = 'com.nomad.app.Application'
+
+group = 'com.nomad'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = '14'
+targetCompatibility = '14'
+
+ext {
+	spring_boot_version = '2.3.3.RELEASE'
+	spring_framwork_version = '5.2.8.RELEASE'
+	hikariCP_version = '3.4.5'
+	postgres_version = '42.2.16'
+	apache_commons_version = '1.20'
+	swagger_version = '2.9.2'
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: "${swagger_version}"
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swagger_version}"
+	implementation group: 'org.springframework', name: 'spring-jdbc', version: "${spring_framwork_version}"
+	implementation group: 'com.zaxxer', name: 'HikariCP', version: "${hikariCP_version}"
+	implementation group: 'org.postgresql', name: 'postgresql', version: "${postgres_version}"
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+jar {
+	manifest {
+		attributes(
+				'Implementation-Title'  : "SBGS",
+				'Implementation-Version': "$archiveVersion",
+				'Implementation-Vendor' : "NomaD",
+				'Built-By'              : System.properties['user.name'],
+				'Build-Timestamp'       : new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+				'Created-By'            : "Gradle ${gradle.gradleVersion}",
+				'Build-JDK'             : "${System.properties['java.archiveVersion']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+				'Build-OS'              : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+				'App-Version'           : "${archiveVersion}"
+		)
+	}
+}
+
+run {
+	classpath += files('src/main/dist/conf')
+}
+
+startScripts {
+	classpath += files('conf')
+	doLast {
+		unixScript.text = unixScript.text
+				.replaceAll('APP_HOME=', 'export APP_HOME=')
+				.replaceAll('\\$APP_HOME/lib/conf', '\\$APP_HOME/conf')
+		windowsScript.text = windowsScript.text
+				.replaceAll('%APP_HOME%\\\\lib\\\\conf', '%APP_HOME%\\\\conf')
+	}
+}

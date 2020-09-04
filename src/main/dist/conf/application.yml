@@ -1,0 +1,47 @@
+# Application Properties
+spring:
+  profiles:
+    active: "basic"
+  main:
+    banner-mode: "off"
+
+---
+# Profile Name
+spring:
+  profiles: basic
+
+server:
+  port: 8099
+#  servlet:
+#    context-path: /sbgs
+
+test:
+  value: 99
+
+max:
+  poolSize: 4
+
+logger:
+  table-name: logger
+
+
+# Logging Properties
+logging:
+  file:
+    name: log/application.log
+  pattern:
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    com.nomad.app: INFO
+
+# DB Properties
+db1:
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://192.168.0.108:5432/testdb
+  user: nomad
+  password: xxxxx
+  fetchSize: 100
+  catalog: null
+  schema: app1
+  test-table: r4
+  
