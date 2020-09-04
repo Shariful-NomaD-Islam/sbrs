@@ -1,6 +1,7 @@
 .gradle
 build/
 gradle/
+log/
 
 ### IntelliJ IDEA ###
 .idea
